@@ -30,6 +30,48 @@ class HashTable:
       self.m = capacity
       self.h = hashFunction
       self.T = [None] * self.m
+
+    #Estadisticas
+    def __len__(self):
+        length = 0
+        for i in range(0,len(self.T)):
+          
+          if self.T[i] != None:
+            length += 1
+            head = self.T[i]
+            if head.next != None:
+               while head.next != None:
+                  length += 1
+                  head = head.next
+        return length
+    
+    def lista_mas_larga(self):
+      listas={}
+      for i in range(0,len(self.T)):
+         length = 0
+         if self.T[i] != None:
+            length += 1
+            
+            if self.T[i].next != None:
+              head = self.T[i]
+              while head.next != None:
+                length += 1
+                head = head.next
+            listas[i] = length
+      if listas:
+        clave_maxima = max(listas, key=listas.get)
+      
+        #return listas
+        return f"La lista con mayor longitud es la del indice: {clave_maxima}\nSu longitud es de: {listas[clave_maxima]}"
+      else:
+         return "lista vacia"
+    
+    def factorDeCarga(self):
+       elementos = float(len(self))
+       capacidad = float(self.m)
+       factor_carga = elementos/capacidad
+       return factor_carga
+    #Consultas
     
     def __str__(self):
       return str(self.T)
@@ -79,7 +121,8 @@ def menu() -> None:
     print("5. Exit")
     print()
 
-hashTable = HashTable(1,hashResto)
+hashTable = HashTable(20,hashResto)
+
 if __name__ == "__main__":
     while True:
         menu()
@@ -87,7 +130,6 @@ if __name__ == "__main__":
         if choice == 1:
             producto = input("Que producto desea agregar?: ")
             codigo = input(f"Inserte el codigo del producto {producto}: ")
-            print("\nEl producto que busca es:")
             hashTable.insert(codigo,producto)
         
         elif choice == 2:
@@ -99,10 +141,15 @@ if __name__ == "__main__":
             hashTable.delete(codigo)
             
         elif choice == 4:
+            print(f"Elementos de la tabla\nCantidad: {len(hashTable)}")
+            print("\nLista mas larga:")
+            
+            print(hashTable.lista_mas_larga())
+
+            print(f"\nRendimiento de factor de carga de la tabla hash\nRendimiento: {hashTable.factorDeCarga()}")
             pass
         elif choice == 5:
             break
         else:
             print("Invalid choice")
         print()
-
